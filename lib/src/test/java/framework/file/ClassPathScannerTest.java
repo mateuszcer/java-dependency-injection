@@ -67,7 +67,7 @@ public class ClassPathScannerTest {
 
     @Test
     public void testComponentAnnotatedClasses() throws IOException {
-        Set<Class<?>> annotatedClasses = classPathScanner.findAllAnnotatedClasses(TestAnnotation.class, "framework.file");
+        Set<Class<?>> annotatedClasses = classPathScanner.findAllAnnotatedClasses(TestAnnotation.class, "framework");
         assertTrue("Check if it includes first component", annotatedClasses.contains(ExampleComponent.class));
         assertTrue("Check if it includes nested component", annotatedClasses.contains(ExampleComponent.ExampleNestedComponent.class));
         assertFalse("Check if it dont include other class", annotatedClasses.contains(ExampleNonComponent.class));
@@ -75,13 +75,13 @@ public class ClassPathScannerTest {
 
     @Test
     public void testZeroAnnotatedClasses() throws IOException {
-        assertEquals("There are no classes with that annotation", 0, classPathScanner.findAllAnnotatedClasses(TestAnnotation2.class, "framework.file").size());
+        assertEquals("There are no classes with that annotation", 0, classPathScanner.findAllAnnotatedClasses(TestAnnotation2.class, "framework").size());
     }
 
 
     @Test
     public void testAnnotatedFields() throws IOException {
-        List<Field> annotatedFields = classPathScanner.findAllAnnotatedFields(TestFieldAnnotation.class, "framework.file");
+        List<Field> annotatedFields = classPathScanner.findAllAnnotatedFields(TestFieldAnnotation.class, "framework");
         assertTrue("There is a field with TestFieldAnnotation called annotatedField", annotatedFields.stream().anyMatch(field -> field.getName().equals("annotatedField")));
         assertEquals("Check if declaring class of annotatedField is ExampleComponentWithAnnotatedFields", annotatedFields.stream().findAny().get().getDeclaringClass(), ExampleComponentWithAnnotatedFields.class);
         assertFalse("nonAnnotatedField is not annotated with this annotation", annotatedFields.stream().anyMatch(field -> field.getName().equals("nonAnnotatedField")));

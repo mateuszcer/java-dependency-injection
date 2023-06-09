@@ -16,7 +16,7 @@ public class ClassPathScanner {
         return ClassPath.from(ClassLoader.getSystemClassLoader())
                 .getAllClasses()
                 .stream()
-                .filter(clazz -> clazz.getPackageName().equals(packageName))
+                .filter(clazz -> clazz.getPackageName().startsWith(packageName))
                 .map(ClassPath.ClassInfo::load)
                 .filter(clazz -> clazz.isAnnotationPresent(annotation))
                 .collect(Collectors.toSet());
@@ -26,7 +26,7 @@ public class ClassPathScanner {
         return ClassPath.from(ClassLoader.getSystemClassLoader())
                 .getAllClasses()
                 .stream()
-                .filter(clazz -> clazz.getPackageName().equals(packageName))
+                .filter(clazz -> clazz.getPackageName().startsWith(packageName))
                 .map(ClassPath.ClassInfo::load)
                 .flatMap(
                         clazz -> Arrays.stream(clazz.getDeclaredFields())

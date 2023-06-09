@@ -9,4 +9,13 @@ public class Dependency {
         this.client = client;
         this.dependsOn = dependsOn;
     }
+
+
+    public Class<?> getClient() {
+        return client;
+    }
+
+    public Class<?> getDependsOn() {
+        return dependsOn;
+    }
 }

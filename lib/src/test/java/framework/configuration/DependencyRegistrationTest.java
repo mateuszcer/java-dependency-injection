@@ -64,8 +64,9 @@ public class DependencyRegistrationTest {
         dependencyRegistration.getAllDependencies();
     }
 
-    @Test(expected = ComponentNotFoundException.class)
+    @Test
     public void testNormalDependency() throws CycledDependencyException, ComponentNotFoundException {
+        dependencyRegistration.registerComponent(ExampleComponent.class);
         dependencyRegistration.registerRelation(ExampleComponent.class, ExampleComponent2.class);
         Set<Dependency> dependencySet = dependencyRegistration.getAllDependencies();
         assertTrue(dependencySet.stream().anyMatch(dependency -> dependency.getClient().equals(ExampleComponent2.class) && dependency.getDependsOn().equals(ExampleComponent.class)));

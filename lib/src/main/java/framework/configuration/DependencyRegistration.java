@@ -39,7 +39,7 @@ public class DependencyRegistration {
     private void validate() throws CycledDependencyException, ComponentNotFoundException {
         if (Graphs.hasCycle(dependencyGraph)) throw new CycledDependencyException();
 
-        if (dependencyGraph.nodes().stream().anyMatch(node -> dependencyGraph.predecessors(node).stream().allMatch(predecessor -> predecessor.isAnnotationPresent(Component.class))))
+        if (dependencyGraph.nodes().stream().anyMatch(node -> dependencyGraph.predecessors(node).stream().anyMatch(predecessor -> !predecessor.isAnnotationPresent(Component.class))))
             throw new ComponentNotFoundException();
 
     }

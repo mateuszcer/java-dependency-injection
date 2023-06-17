@@ -1,4 +1,4 @@
 package framework.exceptions;
 
-public class MultipleImplementationsException extends Exception {
+public class MultipleImplementationsException extends RuntimeException {
 }

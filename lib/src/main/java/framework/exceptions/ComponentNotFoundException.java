@@ -1,4 +1,4 @@
 package framework.exceptions;
 
-public class ComponentNotFoundException extends Exception {
+public class ComponentNotFoundException extends RuntimeException {
 }

@@ -22,7 +22,7 @@ public class DependencyRegistration {
 
     }
 
-    public Set<Dependency> getAllDependencies() throws CycledDependencyException, ComponentNotFoundException {
+    public Set<Dependency> getAllDependencies() {
         if (hasCycledDependencies()) throw new CycledDependencyException();
 
         if (!hasAllImplementations()) throw new ComponentNotFoundException();

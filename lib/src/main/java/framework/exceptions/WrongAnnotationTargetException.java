@@ -1,5 +1,5 @@
 package framework.exceptions;
 
-public class WrongAnnotationTargetException extends Exception {
+public class WrongAnnotationTargetException extends RuntimeException {
 
 }

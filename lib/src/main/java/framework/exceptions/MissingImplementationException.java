@@ -1,4 +1,4 @@
 package framework.exceptions;
 
-public class MissingImplementationException extends Exception {
+public class MissingImplementationException extends RuntimeException {
 }

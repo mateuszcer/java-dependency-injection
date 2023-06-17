@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.Optional;
 import java.util.Set;
 
+
 public class Injector {
     private final Container container;
 
@@ -47,10 +48,15 @@ public class Injector {
     private void createObject(Class<?> clazz) throws ConstructorNotFoundException, MissingImplementationException, ComponentNotFoundException {
         autowire(clazz);
 
-        Constructor<?> constructor = Arrays.stream(clazz.getDeclaredConstructors()).findFirst().orElseThrow(ConstructorNotFoundException::new);
+        Constructor<?> constructor = resolveConstructor(clazz);
+
         Object createdObject;
+
+        Object[] parameters = resolveParameters(constructor);
+
         try {
-            createdObject = constructor.newInstance();
+            createdObject = constructor.newInstance(parameters);
+
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -58,6 +64,26 @@ public class Injector {
         autowireObject(createdObject);
 
         container.registerInstance(clazz, createdObject);
+    }
+
+    private Object[] resolveParameters(Constructor<?> constructor) {
+        return Arrays.stream(constructor.getParameterTypes())
+                .map(param -> container.getInstance(getImplementation(param)).orElseThrow(ComponentNotFoundException::new)).toArray();
+    }
+
+    private Class<?> getImplementation(Class<?> clazz) throws MissingImplementationException {
+        return container.getImplementation(clazz).orElseThrow(MissingImplementationException::new);
+    }
+
+    private Constructor<?> resolveConstructor(Class<?> clazz) throws ConstructorNotFoundException {
+        Constructor<?> constructor;
+
+        constructor = Arrays.stream(clazz.getDeclaredConstructors())
+                .filter(constr -> constr.isAnnotationPresent(Inject.class))
+                .findFirst()
+                .orElse(Arrays.stream(clazz.getDeclaredConstructors()).findFirst().orElseThrow(ConstructorNotFoundException::new));
+
+        return constructor;
     }
 
     protected void autowireObject(Object object) throws MissingImplementationException, ComponentNotFoundException {
@@ -82,14 +108,14 @@ public class Injector {
 
         servicesOpt.get().forEach(service -> {
             try {
-                createObject(container.getImplementation(service).orElseThrow());
+                createObject(container.getImplementation(service).orElseThrow(MissingImplementationException::new));
             } catch (ConstructorNotFoundException | MissingImplementationException | ComponentNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public Object getService(Class<?> clazz) {
-        return container.getInstance(clazz).orElseThrow();
+    public Object getService(Class<?> clazz) throws ComponentNotFoundException {
+        return container.getInstance(clazz).orElseThrow(ComponentNotFoundException::new);
     }
 }

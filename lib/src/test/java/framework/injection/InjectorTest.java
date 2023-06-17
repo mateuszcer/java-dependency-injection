@@ -62,6 +62,25 @@ class ExampleNonImplementedFieldComponent {
 }
 
 
+class ExampleConstructorInjectionComponent {
+
+    private final ExampleComponent exampleInterface;
+
+    @Inject
+    public ExampleConstructorInjectionComponent(ExampleComponent exampleInterface) {
+        this.exampleInterface = exampleInterface;
+    }
+
+    public ExampleComponent getExampleInterface() {
+        return exampleInterface;
+    }
+
+}
+
+
+
+
+
 public class InjectorTest {
 
     private Injector injector;
@@ -75,6 +94,7 @@ public class InjectorTest {
         injector = new Injector(new ObjectRegistry());
         HashSet<Dependency> dependencies = new HashSet<>();
         dependencies.add(new Dependency(ExampleClient.class, ExampleInterface.class, ExampleComponent.class));
+        dependencies.add(new Dependency(ExampleConstructorInjectionComponent.class, ExampleInterface.class, ExampleComponent.class));
         injector.createObjects(dependencies);
     }
 
@@ -96,6 +116,12 @@ public class InjectorTest {
     public void testNonImplementedInjection() throws MissingImplementationException, ComponentNotFoundException {
         var exampleNonImplementedFieldComponent = new ExampleNonImplementedFieldComponent();
         injector.autowireObject(exampleNonImplementedFieldComponent);
+    }
+
+    @Test
+    public void testConstructorInjection() throws ComponentNotFoundException {
+        var exampleConstructorInjectionComponent = (ExampleConstructorInjectionComponent) injector.getService(ExampleConstructorInjectionComponent.class);
+        assertTrue(exampleConstructorInjectionComponent.getExampleInterface().testMethod());
     }
 
 }

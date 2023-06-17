@@ -11,7 +11,7 @@ public class ObjectRegistry implements Container {
     private final Map<Class<?>, Set<Class<?>>> dependencies = new HashMap<>();
 
     @Override
-    public void registerImplementation(Class<?> interfaceClass, Class<?> implementation) throws MultipleImplementationsException {
+    public void registerImplementation(Class<?> interfaceClass, Class<?> implementation) {
         if (implementations.containsKey(interfaceClass) && !implementations.get(interfaceClass).equals(implementation))
             throw new MultipleImplementationsException();
 
@@ -27,7 +27,7 @@ public class ObjectRegistry implements Container {
     public void registerDependency(Class<?> client, Class<?> service) {
         dependencies.compute(client,
                 (key, old) -> {
-                    if(old == null)
+                    if (old == null)
                         old = new HashSet<>();
                     old.add(service);
                     return old;
@@ -36,7 +36,7 @@ public class ObjectRegistry implements Container {
 
     @Override
     public Optional<Class<?>> getImplementation(Class<?> interfaceClass) {
-        if(!interfaceClass.isInterface())
+        if (!interfaceClass.isInterface())
             return Optional.of(interfaceClass);
 
         if (implementations.containsKey(interfaceClass))

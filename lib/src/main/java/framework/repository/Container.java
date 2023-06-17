@@ -1,13 +1,11 @@
 package framework.repository;
 
-import framework.exceptions.MultipleImplementationsException;
-
 import java.util.Optional;
 import java.util.Set;
 
 public interface Container {
 
-    void registerImplementation(Class<?> interfaceClass, Class<?> implementation) throws MultipleImplementationsException;
+    void registerImplementation(Class<?> interfaceClass, Class<?> implementation);
 
     void registerInstance(Class<?> clazz, Object object);
 

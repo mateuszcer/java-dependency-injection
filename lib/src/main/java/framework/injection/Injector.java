@@ -60,7 +60,7 @@ public class Injector {
         container.registerInstance(clazz, createdObject);
     }
 
-    public void autowireObject(Object object) throws MissingImplementationException, ComponentNotFoundException {
+    protected void autowireObject(Object object) throws MissingImplementationException, ComponentNotFoundException {
         for (Field field : object.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(Inject.class))
                 continue;

@@ -57,4 +57,9 @@ public class ObjectRegistry implements Container {
             return Optional.of(dependencies.get(clazz));
         return Optional.empty();
     }
+
+    @Override
+    public Boolean containsInstance(Class<?> clazz) {
+        return components.containsKey(clazz);
+    }
 }

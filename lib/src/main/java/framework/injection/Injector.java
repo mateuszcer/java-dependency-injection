@@ -35,6 +35,9 @@ public class Injector {
     }
 
     private void createObject(Class<?> clazz) {
+        if (container.containsInstance(clazz))
+            return;
+
         autowire(clazz);
 
         Constructor<?> constructor = resolveConstructor(clazz);

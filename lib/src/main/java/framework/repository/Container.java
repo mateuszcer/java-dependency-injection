@@ -17,4 +17,6 @@ public interface Container {
 
     Optional<Set<Class<?>>> getDependencies(Class<?> clazz);
 
+    Boolean containsInstance(Class<?> clazz);
+
 }

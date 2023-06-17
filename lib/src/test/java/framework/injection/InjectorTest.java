@@ -2,6 +2,7 @@ package framework.injection;
 
 import framework.annotation.Component;
 import framework.annotation.Inject;
+import framework.exceptions.ComponentNotFoundException;
 import framework.exceptions.MissingImplementationException;
 import framework.model.Dependency;
 import framework.repository.ObjectRegistry;
@@ -45,6 +46,22 @@ class ExampleClient {
 }
 
 
+class ExampleMissingComponent {
+    @Inject
+    String field;
+}
+
+interface NonImplementedInterface {
+
+}
+
+class ExampleNonImplementedFieldComponent {
+
+    @Inject
+    NonImplementedInterface nonImplementedInterface;
+}
+
+
 public class InjectorTest {
 
     private Injector injector;
@@ -62,11 +79,23 @@ public class InjectorTest {
     }
 
     @Test
-    public void testNormalInjection() throws MissingImplementationException {
+    public void testNormalInjection() throws MissingImplementationException, ComponentNotFoundException {
         injector.autowireObject(this);
         assertTrue(exampleComponent.testMethod());
         ExampleClient exampleClient = (ExampleClient) injector.getService(ExampleClient.class);
         assertTrue(exampleClient.getExampleComponent().testMethod());
+    }
+
+    @Test(expected = ComponentNotFoundException.class)
+    public void testNonComponentInjection() throws MissingImplementationException, ComponentNotFoundException {
+        ExampleMissingComponent exampleMissingComponent = new ExampleMissingComponent();
+        injector.autowireObject(exampleMissingComponent);
+    }
+
+    @Test(expected = MissingImplementationException.class)
+    public void testNonImplementedInjection() throws MissingImplementationException, ComponentNotFoundException {
+        var exampleNonImplementedFieldComponent = new ExampleNonImplementedFieldComponent();
+        injector.autowireObject(exampleNonImplementedFieldComponent);
     }
 
 }

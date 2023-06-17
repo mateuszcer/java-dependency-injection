@@ -1,6 +1,7 @@
 package framework.injection;
 
 import framework.annotation.Inject;
+import framework.exceptions.ComponentNotFoundException;
 import framework.exceptions.ConstructorNotFoundException;
 import framework.exceptions.MissingImplementationException;
 import framework.exceptions.MultipleImplementationsException;
@@ -26,7 +27,7 @@ public class Injector {
         dependencySet.forEach(dependency -> {
             try {
                 createObject(dependency.client());
-            } catch (ConstructorNotFoundException | MissingImplementationException e) {
+            } catch (ConstructorNotFoundException | MissingImplementationException | ComponentNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -43,7 +44,7 @@ public class Injector {
         });
     }
 
-    private void createObject(Class<?> clazz) throws ConstructorNotFoundException, MissingImplementationException {
+    private void createObject(Class<?> clazz) throws ConstructorNotFoundException, MissingImplementationException, ComponentNotFoundException {
         autowire(clazz);
 
         Constructor<?> constructor = Arrays.stream(clazz.getDeclaredConstructors()).findFirst().orElseThrow(ConstructorNotFoundException::new);
@@ -59,7 +60,7 @@ public class Injector {
         container.registerInstance(clazz, createdObject);
     }
 
-    public void autowireObject(Object object) throws MissingImplementationException {
+    public void autowireObject(Object object) throws MissingImplementationException, ComponentNotFoundException {
         for (Field field : object.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(Inject.class))
                 continue;
@@ -67,7 +68,7 @@ public class Injector {
             field.setAccessible(true);
             try {
                 Class<?> impl = container.getImplementation(field.getType()).orElseThrow(MissingImplementationException::new);
-                field.set(object, container.getInstance(impl).orElseThrow());
+                field.set(object, container.getInstance(impl).orElseThrow(ComponentNotFoundException::new));
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -82,7 +83,7 @@ public class Injector {
         servicesOpt.get().forEach(service -> {
             try {
                 createObject(container.getImplementation(service).orElseThrow());
-            } catch (ConstructorNotFoundException | MissingImplementationException e) {
+            } catch (ConstructorNotFoundException | MissingImplementationException | ComponentNotFoundException e) {
                 throw new RuntimeException(e);
             }
         });

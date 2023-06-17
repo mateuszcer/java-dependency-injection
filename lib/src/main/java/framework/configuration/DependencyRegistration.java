@@ -8,6 +8,7 @@ import framework.exceptions.ComponentNotFoundException;
 import framework.exceptions.CycledDependencyException;
 import framework.model.Dependency;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,17 +16,18 @@ public class DependencyRegistration {
 
     private final MutableGraph<Class<?>> dependencyGraph = GraphBuilder.directed().build();
 
+    private final Set<Class<?>> components = new HashSet<>();
+
     public DependencyRegistration() {
 
     }
 
     public Set<Dependency> getAllDependencies() throws CycledDependencyException, ComponentNotFoundException {
-        validate();
-        return dependencyGraph.edges().stream().map(p -> new Dependency(p.target(), p.source())).collect(Collectors.toSet());
-    }
+        if (hasCycledDependencies()) throw new CycledDependencyException();
 
-    public Set<Class<?>> getAllComponents() {
-        return dependencyGraph.nodes().stream().filter(clazz -> clazz.isAnnotationPresent(Component.class)).collect(Collectors.toSet());
+        if (!hasAllImplementations()) throw new ComponentNotFoundException();
+
+        return dependencyGraph.edges().stream().map(p -> new Dependency(p.target(), p.source(), getImplementation(p.source()))).collect(Collectors.toSet());
     }
 
     public void registerRelation(Class<?> declaringClass, Class<?> toInject) {
@@ -33,15 +35,27 @@ public class DependencyRegistration {
     }
 
     public void registerComponent(Class<?> component) {
-        dependencyGraph.addNode(component);
+        components.add(component);
     }
 
-    private void validate() throws CycledDependencyException, ComponentNotFoundException {
-        if (Graphs.hasCycle(dependencyGraph)) throw new CycledDependencyException();
+    private Boolean hasCycledDependencies() {
+        return Graphs.hasCycle(dependencyGraph);
+    }
 
-        if (dependencyGraph.nodes().stream().anyMatch(node -> dependencyGraph.predecessors(node).stream().anyMatch(predecessor -> !predecessor.isAnnotationPresent(Component.class))))
-            throw new ComponentNotFoundException();
+    private Boolean hasAllImplementations() {
 
+        return dependencyGraph.edges().stream()
+                .allMatch(edge -> edge.source().isAnnotationPresent(Component.class) ||
+                        components.stream().anyMatch(component -> edge.source().isAssignableFrom(component)));
+    }
+
+    private Class<?> getImplementation(Class<?> parent) {
+        if (parent.isAnnotationPresent(Component.class))
+            return parent;
+
+        return components.stream()
+                .filter(parent::isAssignableFrom)
+                .findFirst().orElseThrow(RuntimeException::new);
     }
 
 }

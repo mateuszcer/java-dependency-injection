@@ -41,6 +41,30 @@ class ExampleComponent3 {
 }
 
 
+interface ExampleNonImplementedInterface {
+
+}
+
+class ExampleComponentWithNonImplementedDependency {
+    @Inject
+    private ExampleNonImplementedInterface exampleInterface;
+}
+
+
+interface ExampleImplementedInterface {
+
+}
+
+@Component
+class ExampleInterfaceImplementation implements ExampleImplementedInterface {
+
+}
+
+class ExampleComponentWithImplementedDependency {
+    @Inject
+    private ExampleImplementedInterface exampleInterface;
+}
+
 public class DependencyRegistrationTest {
     private DependencyRegistration dependencyRegistration;
 
@@ -69,8 +93,25 @@ public class DependencyRegistrationTest {
         dependencyRegistration.registerComponent(ExampleComponent.class);
         dependencyRegistration.registerRelation(ExampleComponent.class, ExampleComponent2.class);
         Set<Dependency> dependencySet = dependencyRegistration.getAllDependencies();
-        assertTrue(dependencySet.stream().anyMatch(dependency -> dependency.getClient().equals(ExampleComponent2.class) && dependency.getDependsOn().equals(ExampleComponent.class)));
+        assertTrue(dependencySet.stream().anyMatch(dependency -> dependency.client().equals(ExampleComponent2.class)
+                && dependency.service().equals(ExampleComponent.class)
+                && dependency.implementation().equals(ExampleComponent.class)));
+    }
 
+    @Test(expected = ComponentNotFoundException.class)
+    public void testNonPresentImplementation() throws CycledDependencyException, ComponentNotFoundException {
+        dependencyRegistration.registerRelation(ExampleNonImplementedInterface.class, ExampleComponentWithNonImplementedDependency.class);
+        Set<Dependency> dependencySet = dependencyRegistration.getAllDependencies();
+    }
+
+    @Test
+    public void testPresentImplementation() throws CycledDependencyException, ComponentNotFoundException {
+        dependencyRegistration.registerComponent(ExampleInterfaceImplementation.class);
+        dependencyRegistration.registerRelation(ExampleImplementedInterface.class, ExampleComponentWithImplementedDependency.class);
+        Set<Dependency> dependencySet = dependencyRegistration.getAllDependencies();
+        assertTrue(dependencySet.stream().anyMatch(dependency -> dependency.client().equals(ExampleComponentWithImplementedDependency.class)
+                && dependency.service().equals(ExampleImplementedInterface.class)
+                && dependency.implementation().equals(ExampleInterfaceImplementation.class)));
     }
 
 

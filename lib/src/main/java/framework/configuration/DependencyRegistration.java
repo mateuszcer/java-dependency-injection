@@ -23,7 +23,6 @@ public class DependencyRegistration {
     }
 
     public void registerRelation(Class<?> service, Class<?> client) {
-        System.out.println("client: " + client.getName() + " service: " + service.getName());
         dependencyGraph.putEdge(service, client);
     }
 

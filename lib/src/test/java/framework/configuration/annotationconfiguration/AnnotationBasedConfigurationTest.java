@@ -12,7 +12,6 @@ import java.util.Set;
 import static junit.framework.TestCase.assertEquals;
 
 
-
 interface TestInterface {
 
     Boolean testMethod();

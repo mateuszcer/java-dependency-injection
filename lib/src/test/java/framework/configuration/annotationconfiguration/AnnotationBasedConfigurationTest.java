@@ -55,7 +55,7 @@ public class AnnotationBasedConfigurationTest {
     }
 
     @Test
-    public void testCycledRelation() {
+    public void testNormalConfiguration() {
         annotationBasedConfiguration.configure(this.getClass().getPackageName());
         Set<Dependency> dependencySet = annotationBasedConfiguration.getDependencies();
         Dependency dependency = dependencySet.stream().findFirst().orElseThrow();

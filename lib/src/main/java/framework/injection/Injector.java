@@ -47,6 +47,7 @@ public class Injector {
         Object[] parameters = resolveParameters(constructor);
 
         try {
+            constructor.setAccessible(true);
             createdObject = constructor.newInstance(parameters);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);

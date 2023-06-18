@@ -11,7 +11,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
-import java.util.List;
 import java.util.Set;
 
 import static junit.framework.TestCase.*;
@@ -81,7 +80,7 @@ public class ClassPathScannerTest {
 
     @Test
     public void testAnnotatedFields() throws IOException {
-        List<Field> annotatedFields = classPathScanner.findAllAnnotatedFields(TestFieldAnnotation.class, "framework");
+        Set<Field> annotatedFields = classPathScanner.findAllAnnotatedFields(TestFieldAnnotation.class, "framework");
         assertTrue("There is a field with TestFieldAnnotation called annotatedField", annotatedFields.stream().anyMatch(field -> field.getName().equals("annotatedField")));
         assertEquals("Check if declaring class of annotatedField is ExampleComponentWithAnnotatedFields", annotatedFields.stream().findAny().get().getDeclaringClass(), ExampleComponentWithAnnotatedFields.class);
         assertFalse("nonAnnotatedField is not annotated with this annotation", annotatedFields.stream().anyMatch(field -> field.getName().equals("nonAnnotatedField")));

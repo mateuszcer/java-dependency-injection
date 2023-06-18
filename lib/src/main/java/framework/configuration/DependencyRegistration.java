@@ -22,16 +22,16 @@ public class DependencyRegistration {
 
     }
 
+    public void registerRelation(Class<?> service, Class<?> client) {
+        dependencyGraph.putEdge(service, client);
+    }
+
     public Set<Dependency> getAllDependencies() {
         if (hasCycledDependencies()) throw new CycledDependencyException();
 
         if (!hasAllImplementations()) throw new ComponentNotFoundException();
 
         return dependencyGraph.edges().stream().map(p -> new Dependency(p.target(), p.source(), getImplementation(p.source()))).collect(Collectors.toSet());
-    }
-
-    public void registerRelation(Class<?> declaringClass, Class<?> toInject) {
-        dependencyGraph.putEdge(declaringClass, toInject);
     }
 
     public void registerComponent(Class<?> component) {

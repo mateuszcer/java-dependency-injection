@@ -22,9 +22,13 @@ public class AnnotationBasedConfiguration implements Configuration {
     public void configure(String classPath) {
         try {
             classPathScanner.findAllAnnotatedFields(Inject.class, classPath)
+                    .stream()
+                    .filter(field -> field.getDeclaringClass().isAnnotationPresent(Component.class))
                     .forEach(field -> dependencyRegistration.registerRelation(field.getType(), field.getDeclaringClass()));
 
             classPathScanner.findAllAnnotatedConstructors(Inject.class, classPath)
+                    .stream()
+                    .filter(constructor -> constructor.getDeclaringClass().isAnnotationPresent(Component.class))
                     .forEach(constructor -> Arrays.stream(constructor.getParameterTypes()).forEach(param -> dependencyRegistration.registerRelation(param, constructor.getDeclaringClass())));
 
             classPathScanner.findAllAnnotatedClasses(Component.class, classPath)

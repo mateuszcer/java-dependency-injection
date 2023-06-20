@@ -2,7 +2,7 @@
 
 
 
-Stitcher is a minimalistic dependency injection framework for Java applications. 
+Spike is a minimalistic dependency injection framework for Java applications. 
 
 
 

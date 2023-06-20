@@ -6,6 +6,8 @@ import com.spike.exceptions.CycledDependencyException;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableGraph;
+import com.spike.exceptions.MissingImplementationException;
+import com.spike.exceptions.QualifierClassNotFoundException;
 import com.spike.model.Dependency;
 
 import java.util.HashSet;
@@ -55,7 +57,17 @@ public class DependencyRegistration {
 
         return components.stream()
                 .filter(parent::isAssignableFrom)
-                .findFirst().orElseThrow(RuntimeException::new);
+                .findFirst().orElseThrow(MissingImplementationException::new);
     }
+
+    public void registerQualifiedRelation(Class<?> serivce, Class<?> client, String qualifier) {
+        Class<?> implementation = components.stream()
+                .filter(clazz -> clazz.getSimpleName().equals(qualifier))
+                .findFirst()
+                .orElseThrow(QualifierClassNotFoundException::new);
+
+        registerRelation(implementation, client);
+    }
+
 
 }

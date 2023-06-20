@@ -2,6 +2,7 @@ package framework.configuration.annotationconfiguration;
 
 import com.spike.annotation.Component;
 import com.spike.annotation.Inject;
+import com.spike.annotation.Qualifier;
 import com.spike.configuration.AnnotationBasedConfiguration;
 import com.spike.model.Dependency;
 import org.junit.Before;
@@ -31,20 +32,31 @@ class TestComponent implements TestInterface {
 }
 
 @Component
+class TestComponent2 implements TestInterface {
+    public TestComponent2() {
+
+    }
+
+    public Boolean testMethod() {
+        return true;
+    }
+
+}
+
+@Component
 class TestConstructorInjectionComponent {
 
-    private final TestInterface exampleInterface;
-
     @Inject
-    public TestConstructorInjectionComponent(TestInterface exampleInterface) {
-        this.exampleInterface = exampleInterface;
-    }
+    @Qualifier("TestComponent")
+    private TestInterface exampleInterface;
+
 
     public TestInterface getExampleInterface() {
         return exampleInterface;
     }
 
 }
+
 
 public class AnnotationBasedConfigurationTest {
     private AnnotationBasedConfiguration annotationBasedConfiguration;
@@ -60,7 +72,7 @@ public class AnnotationBasedConfigurationTest {
         Set<Dependency> dependencySet = annotationBasedConfiguration.getDependencies();
         Dependency dependency = dependencySet.stream().findFirst().orElseThrow();
         assertEquals(dependency.client(), TestConstructorInjectionComponent.class);
-        assertEquals(dependency.service(), TestInterface.class);
+        assertEquals(dependency.service(), TestComponent.class);
         assertEquals(dependency.implementation(), TestComponent.class);
     }
 }

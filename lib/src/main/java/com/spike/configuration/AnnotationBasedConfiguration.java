@@ -2,6 +2,7 @@ package com.spike.configuration;
 
 import com.spike.annotation.Component;
 import com.spike.annotation.Inject;
+import com.spike.annotation.Qualifier;
 import com.spike.file.ClassPathScanner;
 import com.spike.model.Dependency;
 
@@ -21,19 +22,26 @@ public class AnnotationBasedConfiguration implements Configuration {
 
     public void configure(String classPath) {
         try {
+            classPathScanner.findAllAnnotatedClasses(Component.class, classPath)
+                    .forEach(dependencyRegistration::registerComponent);
+
             classPathScanner.findAllAnnotatedFields(Inject.class, classPath)
                     .stream()
                     .filter(field -> field.getDeclaringClass().isAnnotationPresent(Component.class))
-                    .forEach(field -> dependencyRegistration.registerRelation(field.getType(), field.getDeclaringClass()));
+                    .forEach(field ->
+                    {
+                        if (field.isAnnotationPresent(Qualifier.class)) {
+                            dependencyRegistration.registerQualifiedRelation(field.getType(), field.getDeclaringClass(), field.getAnnotation(Qualifier.class).value());
+                        } else {
+                            dependencyRegistration.registerRelation(field.getType(), field.getDeclaringClass());
+                        }
+                    });
+
 
             classPathScanner.findAllAnnotatedConstructors(Inject.class, classPath)
                     .stream()
                     .filter(constructor -> constructor.getDeclaringClass().isAnnotationPresent(Component.class))
                     .forEach(constructor -> Arrays.stream(constructor.getParameterTypes()).forEach(param -> dependencyRegistration.registerRelation(param, constructor.getDeclaringClass())));
-
-            classPathScanner.findAllAnnotatedClasses(Component.class, classPath)
-                    .forEach(dependencyRegistration::registerComponent);
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

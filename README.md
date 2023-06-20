@@ -1,4 +1,4 @@
-# Stitcher - Dependency Injection Framework for Java
+# Spike - Dependency Injection Framework for Java
 
 
 
@@ -15,7 +15,7 @@ Creating application
 ```java
 class Main {
     public static void main(String[] args) {
-        StitcherApplication application = StitcherApplication.getInstance(Main.class);
+        SpikeApplication application = SpikeApplication.getInstance(Main.class);
         application.start();
     }
 }

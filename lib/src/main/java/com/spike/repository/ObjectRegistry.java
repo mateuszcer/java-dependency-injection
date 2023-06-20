@@ -1,6 +1,6 @@
-package framework.repository;
+package com.spike.repository;
 
-import framework.exceptions.MultipleImplementationsException;
+import com.spike.exceptions.MultipleImplementationsException;
 
 import java.util.*;
 

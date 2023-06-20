@@ -1,11 +1,11 @@
-package framework.injection;
+package com.spike.injection;
 
-import framework.annotation.Inject;
-import framework.exceptions.ComponentNotFoundException;
-import framework.exceptions.ConstructorNotFoundException;
-import framework.exceptions.MissingImplementationException;
-import framework.model.Dependency;
-import framework.repository.Container;
+import com.spike.annotation.Inject;
+import com.spike.exceptions.ComponentNotFoundException;
+import com.spike.exceptions.ConstructorNotFoundException;
+import com.spike.exceptions.MissingImplementationException;
+import com.spike.model.Dependency;
+import com.spike.repository.Container;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -83,7 +83,7 @@ public class Injector {
         return constructor;
     }
 
-    protected void autowireObject(Object object) {
+    public void autowireObject(Object object) {
         for (Field field : object.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(Inject.class))
                 continue;

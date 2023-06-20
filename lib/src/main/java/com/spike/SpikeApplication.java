@@ -1,14 +1,14 @@
-package framework;
+package com.spike;
 
-import framework.configuration.AnnotationBasedConfiguration;
-import framework.configuration.Configuration;
-import framework.injection.Injector;
-import framework.repository.ObjectRegistry;
+import com.spike.configuration.AnnotationBasedConfiguration;
+import com.spike.configuration.Configuration;
+import com.spike.injection.Injector;
+import com.spike.repository.ObjectRegistry;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
-public final class Application {
+public final class SpikeApplication {
 
     private final UUID id = UUID.randomUUID();
     private final LocalDate startupDate = LocalDate.now();
@@ -19,18 +19,18 @@ public final class Application {
 
     private final Injector injector;
 
-    private static Application INSTANCE;
+    private static SpikeApplication INSTANCE;
 
 
-    private Application(Class<?> mainClass, Configuration configuration) {
+    private SpikeApplication(Class<?> mainClass, Configuration configuration) {
         this.mainClass = mainClass;
         this.configuration = configuration;
         this.injector = new Injector(new ObjectRegistry());
     }
 
-    public static Application getInstance(Class<?> mainClass) {
+    public static SpikeApplication getInstance(Class<?> mainClass) {
         if (INSTANCE == null) {
-            INSTANCE = new Application(mainClass, new AnnotationBasedConfiguration());
+            INSTANCE = new SpikeApplication(mainClass, new AnnotationBasedConfiguration());
         }
 
         return INSTANCE;

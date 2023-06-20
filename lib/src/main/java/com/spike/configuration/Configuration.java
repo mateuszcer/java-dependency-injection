@@ -1,6 +1,6 @@
-package framework.configuration;
+package com.spike.configuration;
 
-import framework.model.Dependency;
+import com.spike.model.Dependency;
 
 import java.util.Set;
 

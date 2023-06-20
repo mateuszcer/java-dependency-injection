@@ -1,8 +1,8 @@
-# Stitcher - Dependency Injection Framework for Java
+# Spike - Dependency Injection Framework for Java
 
 
 
-Stitcher is a minimalistic dependency injection framework for Java applications. 
+Spike is a minimalistic dependency injection framework for Java applications. 
 
 
 
@@ -15,7 +15,7 @@ Creating application
 ```java
 class Main {
     public static void main(String[] args) {
-        StitcherApplication application = StitcherApplication.getInstance(Main.class);
+        SpikeApplication application = SpikeApplication.getInstance(Main.class);
         application.start();
     }
 }

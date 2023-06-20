@@ -1,6 +1,7 @@
 package framework.repository;
 
-import framework.exceptions.MultipleImplementationsException;
+import com.spike.exceptions.MultipleImplementationsException;
+import com.spike.repository.ObjectRegistry;
 import org.junit.Before;
 import org.junit.Test;
 

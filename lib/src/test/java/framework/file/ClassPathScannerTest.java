@@ -1,5 +1,6 @@
 package framework.file;
 
+import com.spike.file.ClassPathScanner;
 import org.junit.Before;
 import org.junit.Test;
 

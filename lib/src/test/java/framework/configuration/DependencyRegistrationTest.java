@@ -5,6 +5,7 @@ import com.spike.annotation.Inject;
 import com.spike.configuration.DependencyRegistration;
 import com.spike.exceptions.ComponentNotFoundException;
 import com.spike.exceptions.CycledDependencyException;
+import com.spike.exceptions.MissingImplementationException;
 import com.spike.model.Dependency;
 import org.junit.Before;
 import org.junit.Test;
@@ -99,7 +100,7 @@ public class DependencyRegistrationTest {
                 && dependency.implementation().equals(ExampleComponent.class)));
     }
 
-    @Test(expected = ComponentNotFoundException.class)
+    @Test(expected = MissingImplementationException.class)
     public void testNonPresentImplementation() throws CycledDependencyException, ComponentNotFoundException {
         dependencyRegistration.registerRelation(ExampleNonImplementedInterface.class, ExampleComponentWithNonImplementedDependency.class);
         Set<Dependency> dependencySet = dependencyRegistration.getAllDependencies();

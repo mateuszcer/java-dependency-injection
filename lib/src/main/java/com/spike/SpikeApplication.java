@@ -39,6 +39,7 @@ public final class SpikeApplication {
     public void start() {
         configuration.configure(mainClass.getPackageName());
         injector.createObjects(configuration.getDependencies());
+        injector.createComponents(configuration.getComponents());
     }
 
     public Object getService(Class<?> service) {

@@ -36,13 +36,6 @@ public class ObjectRegistryTest {
         assertEquals(objectRegistry.getImplementation(ExampleInterface.class).orElseThrow(), ExampleImplementation.class);
     }
 
-
-    @Test(expected = MultipleImplementationsException.class)
-    public void testMultipleImplementations() throws MultipleImplementationsException {
-        objectRegistry.registerImplementation(ExampleInterface.class, ExampleImplementation.class);
-        objectRegistry.registerImplementation(ExampleInterface.class, ExampleImplementation2.class);
-    }
-
     @Test
     public void testEmptyImplementation() {
         assertTrue(objectRegistry.getImplementation(ExampleInterface.class).isEmpty());

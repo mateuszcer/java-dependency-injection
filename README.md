@@ -57,6 +57,22 @@ class C {
 }
 ```
 
+Handling multiple implementations
+```java
+class A implements B {
+}
+
+class C implements B {
+}
+
+@Component
+class D {
+    @Inject
+    @Qualifier("C")
+    private B dependency;
+}
+```
+
 Extracting service
 ```java
 class Main {

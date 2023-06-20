@@ -1,10 +1,11 @@
 package framework.configuration;
 
-import framework.annotation.Component;
-import framework.annotation.Inject;
-import framework.exceptions.ComponentNotFoundException;
-import framework.exceptions.CycledDependencyException;
-import framework.model.Dependency;
+import com.spike.annotation.Component;
+import com.spike.annotation.Inject;
+import com.spike.configuration.DependencyRegistration;
+import com.spike.exceptions.ComponentNotFoundException;
+import com.spike.exceptions.CycledDependencyException;
+import com.spike.model.Dependency;
 import org.junit.Before;
 import org.junit.Test;
 

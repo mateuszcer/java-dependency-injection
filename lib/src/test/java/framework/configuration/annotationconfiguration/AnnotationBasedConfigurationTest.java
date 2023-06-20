@@ -1,9 +1,9 @@
 package framework.configuration.annotationconfiguration;
 
-import framework.annotation.Component;
-import framework.annotation.Inject;
-import framework.configuration.AnnotationBasedConfiguration;
-import framework.model.Dependency;
+import com.spike.annotation.Component;
+import com.spike.annotation.Inject;
+import com.spike.configuration.AnnotationBasedConfiguration;
+import com.spike.model.Dependency;
 import org.junit.Before;
 import org.junit.Test;
 

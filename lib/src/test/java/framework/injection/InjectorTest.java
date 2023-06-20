@@ -1,11 +1,12 @@
 package framework.injection;
 
-import framework.annotation.Component;
-import framework.annotation.Inject;
-import framework.exceptions.ComponentNotFoundException;
-import framework.exceptions.MissingImplementationException;
-import framework.model.Dependency;
-import framework.repository.ObjectRegistry;
+import com.spike.annotation.Component;
+import com.spike.annotation.Inject;
+import com.spike.exceptions.ComponentNotFoundException;
+import com.spike.exceptions.MissingImplementationException;
+import com.spike.injection.Injector;
+import com.spike.model.Dependency;
+import com.spike.repository.ObjectRegistry;
 import org.junit.Before;
 import org.junit.Test;
 

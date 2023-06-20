@@ -1,4 +1,4 @@
-package framework.file;
+package com.spike.file;
 
 import com.google.common.reflect.ClassPath;
 

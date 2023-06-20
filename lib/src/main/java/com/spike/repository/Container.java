@@ -1,4 +1,4 @@
-package framework.repository;
+package com.spike.repository;
 
 import java.util.Optional;
 import java.util.Set;

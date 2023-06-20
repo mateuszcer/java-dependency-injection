@@ -1,9 +1,9 @@
 package framework.integration;
 
 
-import framework.Application;
-import framework.annotation.Component;
-import framework.annotation.Inject;
+import com.spike.SpikeApplication;
+import com.spike.annotation.Component;
+import com.spike.annotation.Inject;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,20 +58,20 @@ class TestComponent2 {
 }
 
 
-public class ApplicationTest {
-    Application application;
+public class SpikeApplicationTest {
+    SpikeApplication spikeApplication;
 
     @Before
     public void setUp() {
-        application = Application.getInstance(ApplicationTest.class);
-        application.start();
+        spikeApplication = SpikeApplication.getInstance(SpikeApplicationTest.class);
+        spikeApplication.start();
     }
 
 
     @Test
     public void testStandardConfiguration() {
-        var testComponent = (TestConstructorInjectionComponent) application.getService(TestConstructorInjectionComponent.class);
-        var testComponent2 = (TestComponent2) application.getService(TestComponent2.class);
+        var testComponent = (TestConstructorInjectionComponent) spikeApplication.getService(TestConstructorInjectionComponent.class);
+        var testComponent2 = (TestComponent2) spikeApplication.getService(TestComponent2.class);
         assertTrue(testComponent.getExampleInterface().testMethod());
         assertEquals(testComponent, testComponent2.getTestConstructorInjectionComponent());
     }

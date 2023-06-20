@@ -1,9 +1,9 @@
-package framework.configuration;
+package com.spike.configuration;
 
-import framework.annotation.Component;
-import framework.annotation.Inject;
-import framework.file.ClassPathScanner;
-import framework.model.Dependency;
+import com.spike.annotation.Component;
+import com.spike.annotation.Inject;
+import com.spike.file.ClassPathScanner;
+import com.spike.model.Dependency;
 
 import java.io.IOException;
 import java.util.Arrays;

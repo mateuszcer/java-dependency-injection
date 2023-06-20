@@ -1,4 +1,4 @@
-package framework.annotation;
+package com.spike.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

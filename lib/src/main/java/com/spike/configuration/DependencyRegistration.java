@@ -1,12 +1,12 @@
-package framework.configuration;
+package com.spike.configuration;
 
+import com.spike.annotation.Component;
+import com.spike.exceptions.ComponentNotFoundException;
+import com.spike.exceptions.CycledDependencyException;
 import com.google.common.graph.GraphBuilder;
 import com.google.common.graph.Graphs;
 import com.google.common.graph.MutableGraph;
-import framework.annotation.Component;
-import framework.exceptions.ComponentNotFoundException;
-import framework.exceptions.CycledDependencyException;
-import framework.model.Dependency;
+import com.spike.model.Dependency;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,6 +1,5 @@
 package com.spike.repository;
 
-import com.spike.exceptions.MultipleImplementationsException;
 
 import java.util.*;
 
@@ -10,11 +9,10 @@ public class ObjectRegistry implements Container {
     private final Map<Class<?>, Object> components = new HashMap<>();
     private final Map<Class<?>, Set<Class<?>>> dependencies = new HashMap<>();
 
+    private final Map<String, Class<?>> classNameMap = new HashMap<>();
+
     @Override
     public void registerImplementation(Class<?> interfaceClass, Class<?> implementation) {
-        if (implementations.containsKey(interfaceClass) && !implementations.get(interfaceClass).equals(implementation))
-            throw new MultipleImplementationsException();
-
         implementations.put(interfaceClass, implementation);
     }
 
@@ -61,5 +59,16 @@ public class ObjectRegistry implements Container {
     @Override
     public Boolean containsInstance(Class<?> clazz) {
         return components.containsKey(clazz);
+    }
+
+    @Override
+    public Optional<Object> getInstance(String className) {
+        if (classNameMap.containsKey(className))
+            return getInstance(classNameMap.get(className));
+        return Optional.empty();
+    }
+
+    public void registerClass(Class<?> clazz) {
+        classNameMap.put(clazz.getSimpleName(), clazz);
     }
 }

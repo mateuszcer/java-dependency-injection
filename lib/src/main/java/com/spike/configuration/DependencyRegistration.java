@@ -12,7 +12,6 @@ import com.spike.model.Dependency;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class DependencyRegistration {
 
@@ -20,12 +19,15 @@ public class DependencyRegistration {
 
     private final Set<Class<?>> components = new HashSet<>();
 
+    private final Set<Dependency> dependencies = new HashSet<>();
+
     public DependencyRegistration() {
 
     }
 
     public void registerRelation(Class<?> service, Class<?> client) {
         dependencyGraph.putEdge(service, client);
+        dependencies.add(new Dependency(client, service, getImplementation(service)));
     }
 
     public Set<Dependency> getAllDependencies() {
@@ -33,7 +35,7 @@ public class DependencyRegistration {
 
         if (!hasAllImplementations()) throw new ComponentNotFoundException();
 
-        return dependencyGraph.edges().stream().map(p -> new Dependency(p.target(), p.source(), getImplementation(p.source()))).collect(Collectors.toSet());
+        return dependencies;
     }
 
     public void registerComponent(Class<?> component) {
@@ -52,7 +54,7 @@ public class DependencyRegistration {
     }
 
     private Class<?> getImplementation(Class<?> parent) {
-        if (parent.isAnnotationPresent(Component.class))
+        if (!parent.isInterface())
             return parent;
 
         return components.stream()
@@ -60,13 +62,14 @@ public class DependencyRegistration {
                 .findFirst().orElseThrow(MissingImplementationException::new);
     }
 
-    public void registerQualifiedRelation(Class<?> serivce, Class<?> client, String qualifier) {
+    public void registerQualifiedRelation(Class<?> service, Class<?> client, String qualifier) {
         Class<?> implementation = components.stream()
                 .filter(clazz -> clazz.getSimpleName().equals(qualifier))
                 .findFirst()
                 .orElseThrow(QualifierClassNotFoundException::new);
 
-        registerRelation(implementation, client);
+        dependencyGraph.putEdge(service, client);
+        dependencies.add(new Dependency(client, service, implementation));
     }
 
 

@@ -19,4 +19,8 @@ public interface Container {
 
     Boolean containsInstance(Class<?> clazz);
 
+    Optional<Object> getInstance(String className);
+
+    void registerClass(Class<?> clazz);
+
 }

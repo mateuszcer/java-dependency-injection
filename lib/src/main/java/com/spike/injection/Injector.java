@@ -1,9 +1,11 @@
 package com.spike.injection;
 
 import com.spike.annotation.Inject;
+import com.spike.annotation.Qualifier;
 import com.spike.exceptions.ComponentNotFoundException;
 import com.spike.exceptions.ConstructorNotFoundException;
 import com.spike.exceptions.MissingImplementationException;
+import com.spike.exceptions.QualifierClassNotFoundException;
 import com.spike.model.Dependency;
 import com.spike.repository.Container;
 
@@ -31,6 +33,8 @@ public class Injector {
         dependencySet.forEach(dependency -> {
             container.registerDependency(dependency.client(), dependency.service());
             container.registerImplementation(dependency.service(), dependency.implementation());
+            container.registerClass(dependency.client());
+            container.registerClass(dependency.implementation());
         });
     }
 
@@ -71,6 +75,10 @@ public class Injector {
         return container.getInstance(clazz).orElseThrow(ComponentNotFoundException::new);
     }
 
+    private Object getInstance(String className) {
+        return container.getInstance(className).orElseThrow(QualifierClassNotFoundException::new);
+    }
+
 
     private Constructor<?> resolveConstructor(Class<?> clazz) {
         Constructor<?> constructor;
@@ -90,8 +98,12 @@ public class Injector {
 
             field.setAccessible(true);
             try {
-                Class<?> impl = getImplementation(field.getType());
-                field.set(object, getInstance(impl));
+                if (field.isAnnotationPresent(Qualifier.class))
+                    field.set(object, getInstance(field.getAnnotation(Qualifier.class).value()));
+                else {
+                    Class<?> impl = getImplementation(field.getType());
+                    field.set(object, getInstance(impl));
+                }
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

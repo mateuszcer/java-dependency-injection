@@ -72,7 +72,7 @@ public class AnnotationBasedConfigurationTest {
         Set<Dependency> dependencySet = annotationBasedConfiguration.getDependencies();
         Dependency dependency = dependencySet.stream().findFirst().orElseThrow();
         assertEquals(dependency.client(), TestConstructorInjectionComponent.class);
-        assertEquals(dependency.service(), TestComponent.class);
+        assertEquals(dependency.service(), TestInterface.class);
         assertEquals(dependency.implementation(), TestComponent.class);
     }
 }

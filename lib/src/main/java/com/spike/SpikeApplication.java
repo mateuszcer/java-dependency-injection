@@ -45,6 +45,10 @@ public final class SpikeApplication {
         return injector.getService(service);
     }
 
+    public void autowireObject(Object object) {
+        injector.autowireObject(object);
+    }
+
     public UUID getId() {
         return id;
     }

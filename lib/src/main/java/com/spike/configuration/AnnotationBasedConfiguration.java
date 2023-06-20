@@ -20,6 +20,11 @@ public class AnnotationBasedConfiguration implements Configuration {
         return dependencyRegistration.getAllDependencies();
     }
 
+    @Override
+    public Set<Class<?>> getComponents() {
+        return dependencyRegistration.getComponents();
+    }
+
     public void configure(String classPath) {
         try {
             classPathScanner.findAllAnnotatedClasses(Component.class, classPath)

@@ -29,6 +29,10 @@ public class Injector {
         dependencySet.forEach(dependency -> createObject(dependency.client()));
     }
 
+    public void createComponents(Set<Class<?>> components) {
+        components.forEach(this::createObject);
+    }
+
     private void processDependencies(Set<Dependency> dependencySet) {
         dependencySet.forEach(dependency -> {
             container.registerDependency(dependency.client(), dependency.service());

@@ -73,4 +73,7 @@ public class DependencyRegistration {
     }
 
 
+    public Set<Class<?>> getComponents() {
+        return components;
+    }
 }
